@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.paperbridge</groupId>
+    <artifactId>paperbridge</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>PaperBridge - Document Management</name>
+    <description>Open source document management system.</description>
+    <url></url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License v3.0</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
+        </license>
+    </licenses>
+
+    <modules>
+        <module>paperbridge-backend</module>
+        <module>paperbridge-panama</module>
+        <module>paperbridge-gui</module>
+    </modules>
+
+    <properties>
+        <java.version>21</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot.version>3.3.0</spring-boot.version>
+        <tesseract.version>4.1.0</tesseract.version>
+        <qt.jambi.version>6.5.0</qt.jambi.version>
+        <sane.binding.version>1.0</sane.binding.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Boot Dependencies -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <scope>runtime</scope>
+                <version>2.2.224</version>
+            </dependency>
+
+            <!-- Tesseract OCR Library -->
+            <dependency>
+                <groupId>net.sourceforge.lept4j</groupId>
+                <artifactId>lept4j</artifactId>
+                <version>${tesseract.version}</version>
+            </dependency>
+
+            <!-- Qt Jambi Dependencies -->
+            <dependency>
+                <groupId>org.qtjambi</groupId>
+                <artifactId>qtjambi-core</artifactId>
+                <version>${qt.jambi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.qtjambi</groupId>
+                <artifactId>qtjambi-designer</artifactId>
+                <version>${qt.jambi.version}</version>
+            </dependency>
+
+            <!-- Project Panama Dependencies (These are typically handled by `jextract` and Java itself) -->
+            <!-- Placeholder for Project Panama related artifacts if needed -->
+            <dependency>
+                <groupId>com.paperbridge</groupId>
+                <artifactId>paperbridge-panama</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                </plugin>
+                <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-compiler-plugin</artifactId>
+                  <version>3.11.0</version>
+                  <configuration>
+                    <release>21</release>
+                    <compilerArgs>
+                      <arg>--enable-preview</arg>
+                    </compilerArgs>
+                  </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>
