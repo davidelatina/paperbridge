@@ -7,6 +7,19 @@
 # .properties file
 *.properties
 
+# --- Angular
+# Node.js dependencies
+
+/paperbridge-frontend/node_modules
+
+# compilation output
+/paperbridge-frontend/dist/
+
+# temporary, cache files
+/paperbridge-frontend/tmp/
+/paperbridge-frontend/.angular/cache
+# ---
+
 # BlueJ files
 *.ctxt
 
