@@ -73,11 +73,13 @@ public class DocumentController {
     String filePath = storageService.store(file);
 
     // Update document entity
-    Document document = new Document();
-    document.setFilePath(filePath);
-    document.setCreatedAt(LocalDateTime.now());
-    document.setUpdatedAt(LocalDateTime.now());
-
+    
+    Document document = Document.builder()
+        .title(file.getOriginalFilename())
+        .filePath(filePath)
+        .createdAt(LocalDateTime.now())
+        .updatedAt(LocalDateTime.now())
+        .build();
     return ResponseEntity.ok(documentRepository.save(document));
   }
 
