@@ -40,3 +40,4 @@ hs_err_pid*
 replay_pid*
 /data
 /.vscode
+/paperbridge-backend/target
