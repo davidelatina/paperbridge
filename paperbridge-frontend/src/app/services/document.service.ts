@@ -24,4 +24,10 @@ export class DocumentService {
       params: { tag }
     });
   }
+
+  uploadDocument(file: File): Observable<Document> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<Document>(this.apiUrl, formData);
+  }
 }
