@@ -4,9 +4,14 @@ import org.paperbridge.backend.model.Document;
 import org.paperbridge.backend.model.DocumentHistory;
 import org.paperbridge.backend.repository.DocumentHistoryRepository;
 import org.paperbridge.backend.repository.DocumentRepository;
+import org.paperbridge.backend.storage.StorageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,16 +24,12 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/documents")
+@RequiredArgsConstructor
 public class DocumentController {
 
   private final DocumentRepository documentRepository;
   private final DocumentHistoryRepository documentHistoryRepository;
-
-  public DocumentController(DocumentRepository documentRepository,
-      DocumentHistoryRepository documentHistoryRepository) {
-    this.documentRepository = documentRepository;
-    this.documentHistoryRepository = documentHistoryRepository;
-  }
+  private final StorageService storageService;
 
   /**
    * Retrieves all documents from the database.
@@ -48,7 +49,7 @@ public class DocumentController {
    * @throws DocumentNotFoundException if the document does not exist.
    */
   @GetMapping("/{id}")
-  public ResponseEntity<Document> getDocumentById(@PathVariable Long id) {
+  public ResponseEntity<Document> getDocumentById(@NonNull @PathVariable Long id) {
     Document document = documentRepository.findById(id)
         .orElseThrow(() -> new DocumentNotFoundException("Document not found with ID: " + id));
     return ResponseEntity.ok(document);
@@ -62,10 +63,22 @@ public class DocumentController {
    */
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Document createDocument(@RequestBody Document document) {
+  public ResponseEntity<Document> createDocument(
+      @RequestParam("file") MultipartFile file) {
+
+    // Store file
+    if (file == null) {
+      throw new RuntimeException("File is null");
+    }
+    String filePath = storageService.store(file);
+
+    // Update document entity
+    Document document = new Document();
+    document.setFilePath(filePath);
     document.setCreatedAt(LocalDateTime.now());
     document.setUpdatedAt(LocalDateTime.now());
-    return documentRepository.save(document);
+
+    return ResponseEntity.ok(documentRepository.save(document));
   }
 
   /**
@@ -77,7 +90,7 @@ public class DocumentController {
    * @throws DocumentNotFoundException if the document does not exist.
    */
   @PutMapping("/{id}")
-  public ResponseEntity<Document> updateDocument(@PathVariable Long id,
+  public ResponseEntity<Document> updateDocument(@NonNull @PathVariable Long id,
       @RequestBody Document updatedDocument) {
     Document existingDocument = documentRepository.findById(id)
         .orElseThrow(() -> new DocumentNotFoundException("Document not found with ID: " + id));
@@ -101,7 +114,7 @@ public class DocumentController {
    */
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteDocument(@PathVariable Long id) {
+  public void deleteDocument(@NonNull @PathVariable Long id) {
     if (!documentRepository.existsById(id)) {
       throw new DocumentNotFoundException("Document not found with ID: " + id);
     }
@@ -127,7 +140,7 @@ public class DocumentController {
    * @throws DocumentNotFoundException if the parent document does not exist.
    */
   @GetMapping("/{documentId}/history")
-  public List<DocumentHistory> getDocumentHistory(@PathVariable Long documentId) {
+  public List<DocumentHistory> getDocumentHistory(@NonNull @PathVariable Long documentId) {
     if (!documentRepository.existsById(documentId)) {
       throw new DocumentNotFoundException("Document not found with ID: " + documentId);
     }
