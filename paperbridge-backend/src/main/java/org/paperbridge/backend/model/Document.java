@@ -21,7 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "documents")
+@Table(name = "document")
 public class Document {
 
   /**
@@ -40,23 +40,19 @@ public class Document {
   private String title;
 
   /**
-   * The file path to the original document. This field will store the location of the file on the
-   * file system or in cloud storage.
+   * The file path to the document.
    */
+  @Column(nullable = false, length = 1024)
   private String filePath;
 
   /**
-   * The main content of the document. This field is intended to hold the OCR text extracted from
-   * the document, which can be used for search and indexing.
-   * 
-   * @Lob specifies that the field should be persisted as a large object, suitable for storing large
-   *      amounts of text.
+   * Main content of the document. Holds OCR text
    */
   @Lob
   private String content;
 
   /**
-   * A collection of user-defined tags for the document.
+   * User-defined tags for the document.
    * 
    * @ElementCollection creates a separate table to store the tags.
    * @CollectionTable defines the name of the new table and its join column.
@@ -64,7 +60,7 @@ public class Document {
    */
   @ElementCollection
   @CollectionTable(name = "document_tags", joinColumns = @JoinColumn(name = "document_id"))
-  @Column(name = "tag")
+  @Column(name = "tags")
   private Set<String> tags;
 
   /**
