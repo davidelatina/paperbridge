@@ -1,9 +1,11 @@
 package org.paperbridge.backend.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,9 +48,16 @@ public class DocumentHistory {
   private Integer versionNumber;
 
   /**
-   * File path to the specific version of the document. Allows retrieval of a historical
-   * copy of the file.
+   * Searchable text content extracted for this specific version.
    */
+  @Lob
+  @Column(columnDefinition = "TEXT")
+  private String content;
+
+  /**
+   * File path to the specific version of the document.
+   */
+  @Column(nullable = false, length = 1024)
   private String filePath;
 
   /**
