@@ -12,7 +12,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -49,10 +48,22 @@ public class FilesystemStorageService implements StorageService {
    */
   @Override
   public String store(MultipartFile file) {
+    if (file == null) {
+      throw new RuntimeException("File is null");
+    }
+    if (file.isEmpty()) {
+      throw new RuntimeException("File is empty");
+    }
+    if (file.getOriginalFilename() == null) {
+      throw new RuntimeException("File has no original filename");
+    }
     // Normalize filename and create a unique file name
-    String filename = StringUtils.cleanPath(Optional.of(file.getOriginalFilename()).orElseThrow(() -> new RuntimeException("Null filename")));
+    String filename = StringUtils.cleanPath(file.getOriginalFilename());
     String extension = StringUtils.getFilenameExtension(filename);
-    String uniqueFilename = UUID.randomUUID().toString() + (extension != null ? "." + extension : "");
+    String baseName = StringUtils.stripFilenameExtension(StringUtils.getFilename(filename));
+    String uniqueFilename = baseName + "-" +
+        UUID.randomUUID().toString() + 
+        (extension != null ? "." + extension : "");
 
     try {
       if (file.isEmpty()) {
