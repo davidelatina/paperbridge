@@ -1,7 +1,7 @@
 spring.application.name=backend
 
 # storage location
-paperbridge.storage.location=~/.paperbridge
+paperbridge.storage.location=/data
 
 # Tomcat Configuration
 server.port=8080
