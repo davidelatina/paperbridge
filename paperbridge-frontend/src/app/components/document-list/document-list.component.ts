@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { DocumentService } from '../../services/document.service';
 import { Document } from '../../models/document';
 import { DirectoryTreeComponent } from '../directory-tree/directory-tree.component';
+import { TranslationService } from '../../services/translation.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-document-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, DirectoryTreeComponent],
+  imports: [CommonModule, FormsModule, DirectoryTreeComponent, TranslatePipe],
   templateUrl: './document-list.component.html',
   styleUrl: './document-list.component.css'
 })
@@ -43,7 +45,10 @@ export class DocumentListComponent implements OnInit {
   newFolderName = '';
   folderMode: 'select' | 'create' = 'select';
 
-  constructor(private readonly documentService: DocumentService) {
+  constructor(
+    private readonly documentService: DocumentService,
+    private readonly translationService: TranslationService
+  ) {
     effect(() => {
       // Ensure sidebar width is within reasonable bounds
       const width = this.sidebarWidth();
@@ -74,7 +79,7 @@ export class DocumentListComponent implements OnInit {
         this.loadFolders(); // Reload folders after documents change
       },
       error: (err) => {
-        this.error.set(err.message || 'Failed to load documents');
+        this.error.set(err.message || this.translationService.translate('documents.error.loadFailed'));
         this.loading.set(false);
         console.error('Error loading documents:', err);
       }
@@ -95,15 +100,20 @@ export class DocumentListComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    if (!dateString) return 'N/A';
+    if (!dateString) return this.translationService.translate('common.date.na');
     const date = new Date(dateString);
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
   formatFileSize(bytes: number): string {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return '0 ' + this.translationService.translate('common.fileSize.bytes');
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = [
+      this.translationService.translate('common.fileSize.bytes'),
+      this.translationService.translate('common.fileSize.kb'),
+      this.translationService.translate('common.fileSize.mb'),
+      this.translationService.translate('common.fileSize.gb')
+    ];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
   }
@@ -135,7 +145,7 @@ export class DocumentListComponent implements OnInit {
 
   uploadDocument(): void {
     if (!this.selectedFile) {
-      this.uploadError.set('Please select a file');
+      this.uploadError.set(this.translationService.translate('documents.upload.selectFileError'));
       return;
     }
 
@@ -147,7 +157,7 @@ export class DocumentListComponent implements OnInit {
       // Validate folder name
       const folderName = this.newFolderName.trim();
       if (!/^[a-zA-Z0-9_\-\s]+$/.test(folderName)) {
-        this.uploadError.set('Folder name can only contain letters, numbers, spaces, hyphens, and underscores');
+        this.uploadError.set(this.translationService.translate('documents.upload.folderNameError'));
         return;
       }
       // If a folder is selected, append to it; otherwise use as root folder
@@ -172,7 +182,7 @@ export class DocumentListComponent implements OnInit {
       },
       error: (err) => {
         this.uploading.set(false);
-        this.uploadError.set(err.message || 'Failed to upload document');
+        this.uploadError.set(err.message || this.translationService.translate('documents.error.uploadFailed'));
         console.error('Error uploading document:', err);
       }
     });

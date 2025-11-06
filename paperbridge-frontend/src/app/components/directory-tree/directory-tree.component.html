@@ -1,22 +1,22 @@
 <div class="directory-tree">
   <div class="tree-header">
-    <h3>Directory</h3>
+    <h3>{{ 'directory.title' | translate }}</h3>
     <div class="header-buttons">
       <button 
         class="clear-filter-btn" 
         (click)="selectPath('ROOT')"
         [class.active]="selectedPath() === 'ROOT'"
-        title="Show root directory documents"
+        [title]="'directory.rootTooltip' | translate"
       >
-        Root
+        {{ 'directory.root' | translate }}
       </button>
       <button 
         class="clear-filter-btn" 
         (click)="selectPath(null)"
         [class.active]="selectedPath() === null"
-        title="Show all documents"
+        [title]="'directory.allTooltip' | translate"
       >
-        All
+        {{ 'directory.all' | translate }}
       </button>
     </div>
   </div>
@@ -24,7 +24,7 @@
   <div class="tree-content">
     @if (tree().children.length === 0) {
       <div class="empty-tree">
-        <p>No documents found</p>
+        <p>{{ 'directory.empty' | translate }}</p>
       </div>
     } @else {
       <div class="tree-list">

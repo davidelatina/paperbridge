@@ -2,7 +2,10 @@
 <nav class="navbar">
   <div class="nav-content">
     <h1 class="nav-title">{{ title() }}</h1>
-    <a routerLink="/documents" class="nav-link">Documents</a>
+    <div class="nav-links">
+      <a routerLink="/documents" class="nav-link">{{ 'app.nav.documents' | translate }}</a>
+      <app-language-switcher></app-language-switcher>
+    </div>
   </div>
 </nav>
 

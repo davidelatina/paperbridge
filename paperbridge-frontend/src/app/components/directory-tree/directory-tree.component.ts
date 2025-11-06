@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Document } from '../../models/document';
+import { TranslationService } from '../../services/translation.service';
+import { TranslatePipe } from '../../pipes/translate.pipe';
 
 export interface TreeNode {
   name: string;
@@ -14,7 +16,7 @@ export interface TreeNode {
 @Component({
   selector: 'app-directory-tree',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './directory-tree.component.html',
   styleUrl: './directory-tree.component.css'
 })
@@ -24,11 +26,13 @@ export class DirectoryTreeComponent {
 
   selectedPath = signal<string | null>(null);
   
+  constructor(private translationService: TranslationService) {}
+  
   tree = computed(() => this.buildTree(this.documents));
 
   buildTree(documents: Document[]): TreeNode {
     const root: TreeNode = {
-      name: 'Documents',
+      name: this.translationService.translate('documents.title'),
       path: '',
       isFolder: true,
       children: [],

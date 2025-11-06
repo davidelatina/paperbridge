@@ -1,7 +1,16 @@
 spring.application.name=backend
 
+# storage location
+paperbridge.storage.location=/data
+
 # Tomcat Configuration
 server.port=8080
+
+# CORS
+spring.web.cors.allowed-origins=http://localhost:4200
+spring.web.cors.allowed-methods=GET,POST,PUT,DELETE,OPTIONS
+spring.web.cors.allowed-headers=*
+spring.web.cors.allow-credentials=true
 
 # PostgreSQL Database Configuration
 spring.datasource.url=jdbc:postgresql://localhost:5432/paperbridge
@@ -13,3 +22,8 @@ spring.datasource.driver-class-name=org.postgresql.Driver
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
+
+# Maximum size of any single file
+spring.servlet.multipart.max-file-size=50MB
+# Maximum size of the entire request
+spring.servlet.multipart.max-request-size=50MB

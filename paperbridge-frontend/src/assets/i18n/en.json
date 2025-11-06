@@ -1,0 +1,66 @@
+{
+    "app": {
+      "title": "PaperBridge",
+      "nav": {
+        "documents": "Documents"
+      }
+    },
+    "documents": {
+      "title": "Documents",
+      "subtitle": "Browse and manage your documents",
+      "upload": {
+        "button": "Upload Document",
+        "cancel": "Cancel",
+        "formTitle": "Upload New Document",
+        "chooseFile": "Choose a file to upload",
+        "uploading": "Uploading...",
+        "uploadButton": "Upload",
+        "selectFileError": "Please select a file",
+        "folderNameError": "Folder name can only contain letters, numbers, spaces, hyphens, and underscores"
+      },
+      "folder": {
+        "optional": "Folder (Optional)",
+        "selectExisting": "Select Existing",
+        "createNew": "Create New",
+        "root": "Root",
+        "rootNoFolder": "Root (no folder)",
+        "enterName": "Enter folder name",
+        "nameHint": "Letters, numbers, spaces, hyphens, and underscores only"
+      },
+      "loading": "Loading documents...",
+      "error": {
+        "loadFailed": "Failed to load documents",
+        "uploadFailed": "Failed to upload document"
+      },
+      "retry": "Retry",
+      "empty": {
+        "title": "No documents found",
+        "message": "Get started by uploading your first document."
+      },
+      "card": {
+        "untitled": "Untitled Document",
+        "noContent": "No content available",
+        "created": "Created:",
+        "updated": "Updated:"
+      }
+    },
+    "directory": {
+      "title": "Directory",
+      "root": "Root",
+      "all": "All",
+      "rootTooltip": "Show root directory documents",
+      "allTooltip": "Show all documents",
+      "empty": "No documents found"
+    },
+    "common": {
+      "fileSize": {
+        "bytes": "Bytes",
+        "kb": "KB",
+        "mb": "MB",
+        "gb": "GB"
+      },
+      "date": {
+        "na": "N/A"
+      }
+    }
+  }

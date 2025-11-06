@@ -1,0 +1,66 @@
+{
+    "app": {
+      "title": "PaperBridge",
+      "nav": {
+        "documents": "Documenti"
+      }
+    },
+    "documents": {
+      "title": "Documenti",
+      "subtitle": "Sfoglia e gestisci i tuoi documenti",
+      "upload": {
+        "button": "Carica Documento",
+        "cancel": "Annulla",
+        "formTitle": "Carica Nuovo Documento",
+        "chooseFile": "Scegli un file da caricare",
+        "uploading": "Caricamento...",
+        "uploadButton": "Carica",
+        "selectFileError": "Seleziona un file",
+        "folderNameError": "Il nome della cartella può contenere solo lettere, numeri, spazi, trattini e underscore"
+      },
+      "folder": {
+        "optional": "Cartella (Opzionale)",
+        "selectExisting": "Seleziona Esistente",
+        "createNew": "Crea Nuova",
+        "root": "Radice",
+        "rootNoFolder": "Radice (nessuna cartella)",
+        "enterName": "Inserisci nome cartella",
+        "nameHint": "Solo lettere, numeri, spazi, trattini e underscore"
+      },
+      "loading": "Caricamento documenti...",
+      "error": {
+        "loadFailed": "Impossibile caricare i documenti",
+        "uploadFailed": "Impossibile caricare il documento"
+      },
+      "retry": "Riprova",
+      "empty": {
+        "title": "Nessun documento trovato",
+        "message": "Inizia caricando il tuo primo documento."
+      },
+      "card": {
+        "untitled": "Documento Senza Titolo",
+        "noContent": "Nessun contenuto disponibile",
+        "created": "Creato:",
+        "updated": "Aggiornato:"
+      }
+    },
+    "directory": {
+      "title": "Directory",
+      "root": "Radice",
+      "all": "Tutti",
+      "rootTooltip": "Mostra documenti della directory radice",
+      "allTooltip": "Mostra tutti i documenti",
+      "empty": "Nessun documento trovato"
+    },
+    "common": {
+      "fileSize": {
+        "bytes": "Byte",
+        "kb": "KB",
+        "mb": "MB",
+        "gb": "GB"
+      },
+      "date": {
+        "na": "N/D"
+      }
+    }
+  }
