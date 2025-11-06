@@ -22,6 +22,15 @@ public interface StorageService {
   String store(MultipartFile file);
 
   /**
+   * Stores a file on the filesystem in a specified subfolder.
+   *
+   * @param file The file received from the client.
+   * @param subfolder The subfolder path (e.g., "folder1" or "folder1/subfolder"). Can be null or empty for root.
+   * @return The canonical, relative file path used for the Document entity.
+   */
+  String store(MultipartFile file, String subfolder);
+
+  /**
    * Resolves the Path for a stored file given its relative path.
    *
    * @param relativePath The relative path stored in the Document entity.

@@ -58,19 +58,21 @@ public class DocumentController {
   /**
    * Creates a new document.
    *
-   * @param document The document object to be created.
+   * @param file The file to upload.
+   * @param subfolder Optional subfolder path where the file should be stored.
    * @return The newly created document.
    */
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public ResponseEntity<Document> createDocument(
-      @RequestParam("file") MultipartFile file) {
+      @RequestParam("file") MultipartFile file,
+      @RequestParam(value = "subfolder", required = false) String subfolder) {
 
     // Store file
     if (file == null) {
       throw new RuntimeException("File is null");
     }
-    String filePath = storageService.store(file);
+    String filePath = storageService.store(file, subfolder);
 
     // Update document entity
     
@@ -147,6 +149,26 @@ public class DocumentController {
       throw new DocumentNotFoundException("Document not found with ID: " + documentId);
     }
     return documentHistoryRepository.findByDocumentIdOrderByVersionNumber(documentId);
+  }
+
+  /**
+   * Retrieves a list of unique folder paths from all documents.
+   *
+   * @return A list of folder paths (e.g., ["folder1", "folder1/subfolder", "folder2"]).
+   */
+  @GetMapping("/folders")
+  public List<String> getFolders() {
+    return documentRepository.findAll().stream()
+        .map(Document::getFilePath)
+        .filter(path -> path != null && path.contains("/"))
+        .map(path -> {
+          int lastSlash = path.lastIndexOf("/");
+          return lastSlash > 0 ? path.substring(0, lastSlash) : "";
+        })
+        .filter(folder -> !folder.isEmpty())
+        .distinct()
+        .sorted()
+        .toList();
   }
 }
 

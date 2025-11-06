@@ -32,6 +32,10 @@ export class DocumentListComponent implements OnInit {
   uploadError = signal<string | null>(null);
   selectedFile: File | null = null;
   showUploadForm = signal<boolean>(false);
+  folders = signal<string[]>([]);
+  selectedFolder = '';
+  newFolderName = '';
+  folderMode: 'select' | 'create' = 'select';
 
   constructor(private documentService: DocumentService) {
     effect(() => {
@@ -47,6 +51,7 @@ export class DocumentListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDocuments();
+    this.loadFolders();
     // Add global event listeners for resizing
     document.addEventListener('mousemove', (e) => this.onMouseMove(e));
     document.addEventListener('mouseup', () => this.onMouseUp());
@@ -60,11 +65,25 @@ export class DocumentListComponent implements OnInit {
       next: (docs) => {
         this.allDocuments.set(docs);
         this.loading.set(false);
+        this.loadFolders(); // Reload folders after documents change
       },
       error: (err) => {
         this.error.set(err.message || 'Failed to load documents');
         this.loading.set(false);
         console.error('Error loading documents:', err);
+      }
+    });
+  }
+
+  loadFolders(): void {
+    this.documentService.getFolders().subscribe({
+      next: (folderList) => {
+        this.folders.set(folderList);
+      },
+      error: (err) => {
+        console.error('Error loading folders:', err);
+        // Don't show error for folders, just use empty list
+        this.folders.set([]);
       }
     });
   }
@@ -96,7 +115,16 @@ export class DocumentListComponent implements OnInit {
     if (!this.showUploadForm()) {
       this.selectedFile = null;
       this.uploadError.set(null);
+      this.selectedFolder = '';
+      this.newFolderName = '';
+      this.folderMode = 'select';
     }
+  }
+
+  toggleFolderMode(): void {
+    this.folderMode = this.folderMode === 'select' ? 'create' : 'select';
+    this.selectedFolder = '';
+    this.newFolderName = '';
   }
 
   uploadDocument(): void {
@@ -105,15 +133,36 @@ export class DocumentListComponent implements OnInit {
       return;
     }
 
+    // Determine subfolder path
+    let subfolder: string | undefined = undefined;
+    if (this.folderMode === 'select' && this.selectedFolder.trim()) {
+      subfolder = this.selectedFolder.trim();
+    } else if (this.folderMode === 'create' && this.newFolderName.trim()) {
+      // Validate folder name
+      const folderName = this.newFolderName.trim();
+      if (!/^[a-zA-Z0-9_\-\s]+$/.test(folderName)) {
+        this.uploadError.set('Folder name can only contain letters, numbers, spaces, hyphens, and underscores');
+        return;
+      }
+      // If a folder is selected, append to it; otherwise use as root folder
+      if (this.selectedFolder.trim()) {
+        subfolder = `${this.selectedFolder.trim()}/${folderName}`;
+      } else {
+        subfolder = folderName;
+      }
+    }
+
     this.uploading.set(true);
     this.uploadError.set(null);
 
-    this.documentService.uploadDocument(this.selectedFile).subscribe({
+    this.documentService.uploadDocument(this.selectedFile, subfolder).subscribe({
       next: () => {
         this.uploading.set(false);
         this.selectedFile = null;
+        this.selectedFolder = '';
+        this.newFolderName = '';
         this.showUploadForm.set(false);
-        this.loadDocuments(); // Reload the document list
+        this.loadDocuments(); // Reload the document list and folders
       },
       error: (err) => {
         this.uploading.set(false);

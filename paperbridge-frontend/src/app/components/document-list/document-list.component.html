@@ -43,6 +43,73 @@
           }
         </div>
 
+        <div class="form-group">
+          <label class="form-label">Folder (Optional)</label>
+          <div class="folder-mode-toggle">
+            <button 
+              type="button" 
+              class="mode-button" 
+              [class.active]="folderMode === 'select'"
+              (click)="toggleFolderMode()"
+              [disabled]="uploading()"
+            >
+              Select Existing
+            </button>
+            <button 
+              type="button" 
+              class="mode-button" 
+              [class.active]="folderMode === 'create'"
+              (click)="toggleFolderMode()"
+              [disabled]="uploading()"
+            >
+              Create New
+            </button>
+          </div>
+
+          @if (folderMode === 'select') {
+            <select 
+              class="folder-select"
+              [(ngModel)]="selectedFolder"
+              name="selectedFolder"
+              [disabled]="uploading()"
+            >
+              <option value="">Root (no folder)</option>
+              @for (folder of folders(); track folder) {
+                <option [value]="folder">{{ folder }}</option>
+              }
+            </select>
+          } @else {
+            <div class="new-folder-input">
+              <select 
+                class="folder-select"
+                [(ngModel)]="selectedFolder"
+                name="parentFolder"
+                [disabled]="uploading()"
+              >
+                <option value="">Root</option>
+                @for (folder of folders(); track folder) {
+                  <option [value]="folder">{{ folder }}</option>
+                }
+              </select>
+              <input 
+                type="text" 
+                class="folder-name-input"
+                [(ngModel)]="newFolderName"
+                name="newFolderName"
+                placeholder="Enter folder name"
+                [disabled]="uploading()"
+              />
+              <div class="folder-name-hint">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                  <path d="M12 8V12M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Letters, numbers, spaces, hyphens, and underscores only</span>
+              </div>
+            </div>
+          }
+        </div>
+
         @if (uploadError()) {
           <div class="form-error">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

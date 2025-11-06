@@ -48,6 +48,18 @@ public class FilesystemStorageService implements StorageService {
    */
   @Override
   public String store(MultipartFile file) {
+    return store(file, null);
+  }
+
+  /**
+   * Saves the MultipartFile in a subfolder and returns the relative path.
+   *
+   * @param file The file received from the client.
+   * @param subfolder The subfolder path (e.g., "folder1" or "folder1/subfolder"). Can be null or empty for root.
+   * @return The relative path used in the Document entity.
+   */
+  @Override
+  public String store(MultipartFile file, String subfolder) {
     if (file == null) {
       throw new RuntimeException("File is null");
     }
@@ -70,10 +82,26 @@ public class FilesystemStorageService implements StorageService {
         throw new IOException("Failed to store empty file " + filename);
       }
 
-      Path destinationFile = this.rootLocation.resolve(uniqueFilename).normalize().toAbsolutePath();
+      // Handle subfolder path
+      Path targetDirectory = this.rootLocation;
+      if (subfolder != null && !subfolder.trim().isEmpty()) {
+        // Normalize and sanitize subfolder path
+        String normalizedSubfolder = StringUtils.cleanPath(subfolder.trim());
+        // Prevent path traversal attacks
+        if (normalizedSubfolder.startsWith("..") || normalizedSubfolder.contains("..")) {
+          throw new IOException("Invalid subfolder path: " + subfolder);
+        }
+        targetDirectory = this.rootLocation.resolve(normalizedSubfolder);
+        // Create subfolder(s) if they don't exist
+        Files.createDirectories(targetDirectory);
+      }
+
+      Path destinationFile = targetDirectory.resolve(uniqueFilename).normalize().toAbsolutePath();
 
       // Security check to prevent path traversal
-      if (!destinationFile.getParent().equals(this.rootLocation.toAbsolutePath())) {
+      Path normalizedRoot = this.rootLocation.toAbsolutePath().normalize();
+      Path normalizedDestination = destinationFile.getParent().normalize();
+      if (!normalizedDestination.startsWith(normalizedRoot)) {
         throw new IOException("Cannot store file outside the configured directory.");
       }
 
@@ -81,7 +109,11 @@ public class FilesystemStorageService implements StorageService {
         Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
       }
 
-      // Return the relative path for database storage
+      // Return the relative path for database storage (include subfolder if present)
+      if (subfolder != null && !subfolder.trim().isEmpty()) {
+        String normalizedSubfolder = StringUtils.cleanPath(subfolder.trim());
+        return normalizedSubfolder + "/" + uniqueFilename;
+      }
       return uniqueFilename;
 
     } catch (IOException e) {

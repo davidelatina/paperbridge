@@ -25,9 +25,16 @@ export class DocumentService {
     });
   }
 
-  uploadDocument(file: File): Observable<Document> {
+  getFolders(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/folders`);
+  }
+
+  uploadDocument(file: File, subfolder?: string): Observable<Document> {
     const formData = new FormData();
     formData.append('file', file);
+    if (subfolder && subfolder.trim()) {
+      formData.append('subfolder', subfolder.trim());
+    }
     return this.http.post<Document>(this.apiUrl, formData);
   }
 }
