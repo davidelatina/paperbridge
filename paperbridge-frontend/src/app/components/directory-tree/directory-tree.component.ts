@@ -105,10 +105,17 @@ export class DirectoryTreeComponent {
     return count;
   }
 
-  toggleNode(node: TreeNode): void {
+  toggleExpansion(node: TreeNode, event: Event): void {
+    event.stopPropagation();
     if (node.isFolder) {
       node.expanded = !node.expanded;
-    } else {
+    }
+  }
+
+  selectFolder(node: TreeNode): void {
+    if (node.isFolder) {
+      // Expand folder when selected
+      node.expanded = true;
       this.selectPath(node.path);
     }
   }

@@ -21,9 +21,15 @@ export class DocumentListComponent implements OnInit {
   documents = computed(() => {
     const path = this.selectedPath();
     if (!path) {
+      // Show all documents
       return this.allDocuments();
     }
-    return this.allDocuments().filter(doc => doc.filePath === path || doc.filePath.startsWith(path + '/'));
+    if (path === 'ROOT') {
+      // Show only root-level documents (no '/' in filePath)
+      return this.allDocuments().filter(doc => !doc.filePath.includes('/'));
+    }
+    // Show documents in the selected folder and its subfolders
+    return this.allDocuments().filter(doc => doc.filePath.startsWith(path + '/'));
   });
   
   loading = signal<boolean>(true);
@@ -37,7 +43,7 @@ export class DocumentListComponent implements OnInit {
   newFolderName = '';
   folderMode: 'select' | 'create' = 'select';
 
-  constructor(private documentService: DocumentService) {
+  constructor(private readonly documentService: DocumentService) {
     effect(() => {
       // Ensure sidebar width is within reasonable bounds
       const width = this.sidebarWidth();

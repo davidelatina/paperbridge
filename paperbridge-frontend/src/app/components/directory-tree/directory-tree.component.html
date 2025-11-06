@@ -1,14 +1,24 @@
 <div class="directory-tree">
   <div class="tree-header">
     <h3>Directory</h3>
-    <button 
-      class="clear-filter-btn" 
-      (click)="selectPath(null)"
-      [class.active]="selectedPath() === null"
-      title="Show all documents"
-    >
-      All
-    </button>
+    <div class="header-buttons">
+      <button 
+        class="clear-filter-btn" 
+        (click)="selectPath('ROOT')"
+        [class.active]="selectedPath() === 'ROOT'"
+        title="Show root directory documents"
+      >
+        Root
+      </button>
+      <button 
+        class="clear-filter-btn" 
+        (click)="selectPath(null)"
+        [class.active]="selectedPath() === null"
+        title="Show all documents"
+      >
+        All
+      </button>
+    </div>
   </div>
   
   <div class="tree-content">
@@ -27,23 +37,32 @@
 </div>
 
 <ng-template #treeNodeTemplate let-node="node" let-depth="depth">
-  <div class="tree-node" [class.selected]="selectedPath() === node.path && !node.isFolder">
+  <div class="tree-node" [class.selected]="selectedPath() === node.path && node.isFolder">
     @if (node.isFolder) {
       <div 
         class="tree-node-content folder-node"
-        (click)="toggleNode(node)"
+        [class.selected]="selectedPath() === node.path"
+        (click)="selectFolder(node)"
       >
         <span class="tree-indent" [style.width.px]="depth * 16"></span>
-        <span class="tree-icon">
+        <span 
+          class="tree-expand-icon"
+          (click)="toggleExpansion(node, $event)"
+        >
           @if (node.expanded) {
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5 19h14V9H5v10zm0-12h6l2 2h6v2H5V7z" fill="currentColor"/>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           } @else {
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5 19h14V9H5v10zm0-12h6l2 2h6v2H5V7z" fill="currentColor"/>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           }
+        </span>
+        <span class="tree-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 19h14V9H5v10zm0-12h6l2 2h6v2H5V7z" fill="currentColor"/>
+          </svg>
         </span>
         <span class="tree-label">{{ node.name }}</span>
         <span class="tree-count">({{ countDocuments(node) }})</span>
@@ -58,10 +77,9 @@
     } @else {
       <div 
         class="tree-node-content file-node"
-        [class.selected]="selectedPath() === node.path"
-        (click)="selectPath(node.path)"
       >
         <span class="tree-indent" [style.width.px]="depth * 16"></span>
+        <span class="tree-expand-icon" style="visibility: hidden;"></span>
         <span class="tree-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
