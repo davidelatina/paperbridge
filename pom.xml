@@ -21,12 +21,10 @@
 
     <modules>
         <module>paperbridge-backend</module>
-        <module>paperbridge-panama</module>
-        <module>paperbridge-gui</module>
     </modules>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.version>3.3.0</spring-boot.version>
         <tesseract.version>4.1.0</tesseract.version>
@@ -53,33 +51,6 @@
                 <scope>runtime</scope>
                 <version>2.2.224</version>
             </dependency>
-
-            <!-- Tesseract OCR Library -->
-            <dependency>
-                <groupId>net.sourceforge.lept4j</groupId>
-                <artifactId>lept4j</artifactId>
-                <version>${tesseract.version}</version>
-            </dependency>
-
-            <!-- Qt Jambi Dependencies -->
-            <dependency>
-                <groupId>org.qtjambi</groupId>
-                <artifactId>qtjambi-core</artifactId>
-                <version>${qt.jambi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.qtjambi</groupId>
-                <artifactId>qtjambi-designer</artifactId>
-                <version>${qt.jambi.version}</version>
-            </dependency>
-
-            <!-- Project Panama Dependencies (These are typically handled by `jextract` and Java itself) -->
-            <!-- Placeholder for Project Panama related artifacts if needed -->
-            <dependency>
-                <groupId>com.paperbridge</groupId>
-                <artifactId>paperbridge-panama</artifactId>
-                <version>${project.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -96,10 +67,7 @@
                   <artifactId>maven-compiler-plugin</artifactId>
                   <version>3.11.0</version>
                   <configuration>
-                    <release>21</release>
-                    <compilerArgs>
-                      <arg>--enable-preview</arg>
-                    </compilerArgs>
+                    <release>25</release>
                   </configuration>
                 </plugin>
             </plugins>
