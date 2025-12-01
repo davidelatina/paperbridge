@@ -37,4 +37,13 @@ export class DocumentService {
     }
     return this.http.post<Document>(this.apiUrl, formData);
   }
+
+  /**
+   * Returns the URL to access the file content for a document.
+   * @param id The document ID
+   * @returns The URL string
+   */
+  getDocumentFileUrl(id: number): string {
+    return `${this.apiUrl}/${id}/file`;
+  }
 }

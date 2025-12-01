@@ -77,6 +77,8 @@
     } @else {
       <div 
         class="tree-node-content file-node"
+        (dblclick)="onFileDoubleClick(node, $event)"
+        [style.cursor]="node.document && node.document.filePath.toLowerCase().endsWith('.pdf') ? 'pointer' : 'default'"
       >
         <span class="tree-indent" [style.width.px]="depth * 16"></span>
         <span class="tree-expand-icon" style="visibility: hidden;"></span>

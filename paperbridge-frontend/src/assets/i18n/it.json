@@ -62,5 +62,12 @@
       "date": {
         "na": "N/D"
       }
+    },
+    "pdfViewer": {
+      "back": "Indietro",
+      "loading": "Caricamento PDF...",
+      "error": {
+        "title": "Errore nel Caricamento del PDF"
+      }
     }
   }

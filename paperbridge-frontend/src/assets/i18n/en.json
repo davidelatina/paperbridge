@@ -62,5 +62,12 @@
       "date": {
         "na": "N/A"
       }
+    },
+    "pdfViewer": {
+      "back": "Back",
+      "loading": "Loading PDF...",
+      "error": {
+        "title": "Error Loading PDF"
+      }
     }
   }

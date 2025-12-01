@@ -185,7 +185,11 @@
         } @else {
           <div class="document-grid">
             @for (document of documents(); track document.id) {
-              <div class="document-card">
+              <div 
+                class="document-card"
+                (dblclick)="onDocumentDoubleClick(document)"
+                [style.cursor]="document.filePath.toLowerCase().endsWith('.pdf') ? 'pointer' : 'default'"
+              >
                 <div class="document-header">
                   <h3 class="document-title">{{ document.title || ('documents.card.untitled' | translate) }}</h3>
                   <span class="document-id">#{{ document.id }}</span>

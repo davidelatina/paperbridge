@@ -1,6 +1,7 @@
 import { Component, OnInit, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DocumentService } from '../../services/document.service';
 import { Document } from '../../models/document';
 import { DirectoryTreeComponent } from '../directory-tree/directory-tree.component';
@@ -47,7 +48,8 @@ export class DocumentListComponent implements OnInit {
 
   constructor(
     private readonly documentService: DocumentService,
-    private readonly translationService: TranslationService
+    private readonly translationService: TranslationService,
+    private readonly router: Router
   ) {
     effect(() => {
       // Ensure sidebar width is within reasonable bounds
@@ -208,5 +210,13 @@ export class DocumentListComponent implements OnInit {
 
   onMouseUp(): void {
     this.isResizing.set(false);
+  }
+
+  onDocumentDoubleClick(document: Document): void {
+    // Check if it's a PDF file (by extension)
+    const fileName = document.filePath.toLowerCase();
+    if (fileName.endsWith('.pdf')) {
+      this.router.navigate(['/viewer', document.id]);
+    }
   }
 }

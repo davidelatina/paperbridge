@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Document } from '../../models/document';
 import { TranslationService } from '../../services/translation.service';
 import { TranslatePipe } from '../../pipes/translate.pipe';
@@ -26,7 +27,10 @@ export class DirectoryTreeComponent {
 
   selectedPath = signal<string | null>(null);
   
-  constructor(private translationService: TranslationService) {}
+  constructor(
+    private translationService: TranslationService,
+    private router: Router
+  ) {}
   
   tree = computed(() => this.buildTree(this.documents));
 
@@ -127,6 +131,17 @@ export class DirectoryTreeComponent {
   selectPath(path: string | null): void {
     this.selectedPath.set(path);
     this.pathSelected.emit(path);
+  }
+
+  onFileDoubleClick(node: TreeNode, event: Event): void {
+    event.stopPropagation();
+    if (!node.isFolder && node.document) {
+      // Check if it's a PDF file (by extension)
+      const fileName = node.document.filePath.toLowerCase();
+      if (fileName.endsWith('.pdf')) {
+        this.router.navigate(['/viewer', node.document.id]);
+      }
+    }
   }
 }
 

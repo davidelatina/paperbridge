@@ -1,0 +1,50 @@
+<div class="pdf-viewer-container">
+  <header class="viewer-header">
+    <div class="header-content">
+      <button class="back-button" (click)="goBack()" [title]="'pdfViewer.back' | translate">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>{{ 'pdfViewer.back' | translate }}</span>
+      </button>
+      <h1 class="document-title">{{ document()?.title || ('pdfViewer.loading' | translate) }}</h1>
+    </div>
+  </header>
+
+  <div class="viewer-content">
+    @if (loading()) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>{{ 'pdfViewer.loading' | translate }}</p>
+      </div>
+    } @else if (error()) {
+      <div class="error-container">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 8V12M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <h2>{{ 'pdfViewer.error.title' | translate }}</h2>
+        <p>{{ error() }}</p>
+        <button class="retry-button" (click)="goBack()">{{ 'pdfViewer.back' | translate }}</button>
+      </div>
+    } @else if (pdfUrl()) {
+      <ngx-extended-pdf-viewer
+        [src]="pdfUrl()!"
+        useBrowserLocale="true"
+        [showSidebarButton]="true"
+        [showFindButton]="true"
+        [showPagingButtons]="true"
+        [showZoomButtons]="true"
+        [showPresentationModeButton]="true"
+        [showOpenFileButton]="false"
+        [showPrintButton]="true"
+        [showDownloadButton]="true"
+        [showSecondaryToolbarButton]="true"
+        [height]="'calc(100vh - 80px)'"
+        [zoom]="'auto'"
+        [filenameForDownload]="document()?.title || 'document.pdf'"
+      ></ngx-extended-pdf-viewer>
+    }
+  </div>
+</div>
+

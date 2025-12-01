@@ -5,7 +5,11 @@ import org.paperbridge.backend.document.model.DocumentHistory;
 import org.paperbridge.backend.document.repository.DocumentHistoryRepository;
 import org.paperbridge.backend.document.repository.DocumentRepository;
 import org.paperbridge.backend.document.storage.StorageService;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -169,6 +176,41 @@ public class DocumentController {
         .distinct()
         .sorted()
         .toList();
+  }
+
+  /**
+   * Serves the file content for a document by its ID.
+   *
+   * @param id The ID of the document.
+   * @return The file resource with appropriate headers.
+   * @throws DocumentNotFoundException if the document does not exist.
+   */
+  @GetMapping("/{id}/file")
+  public ResponseEntity<Resource> getDocumentFile(@NonNull @PathVariable Long id) {
+    Document document = documentRepository.findById(id)
+        .orElseThrow(() -> new DocumentNotFoundException("Document not found with ID: " + id));
+
+    try {
+      Path filePath = storageService.load(document.getFilePath());
+      Resource resource = new UrlResource(filePath.toUri());
+
+      if (!resource.exists() || !resource.isReadable()) {
+        throw new RuntimeException("File not found or not readable: " + document.getFilePath());
+      }
+
+      // Determine content type
+      String contentType = Files.probeContentType(filePath);
+      if (contentType == null) {
+        contentType = "application/octet-stream";
+      }
+
+      return ResponseEntity.ok()
+          .contentType(MediaType.parseMediaType(contentType))
+          .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + document.getTitle() + "\"")
+          .body(resource);
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to load file for document ID: " + id, e);
+    }
   }
 }
 
