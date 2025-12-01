@@ -1,4 +1,4 @@
-package org.paperbridge.backend.model;
+package org.paperbridge.backend.document.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -70,4 +70,6 @@ public class DocumentHistory {
    */
   private LocalDateTime createdAt;
 }
+
+
 

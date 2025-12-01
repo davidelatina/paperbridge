@@ -1,4 +1,4 @@
-package org.paperbridge.backend.model;
+package org.paperbridge.backend.document.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -73,4 +73,6 @@ public class Document {
    */
   private LocalDateTime updatedAt;
 }
+
+
 

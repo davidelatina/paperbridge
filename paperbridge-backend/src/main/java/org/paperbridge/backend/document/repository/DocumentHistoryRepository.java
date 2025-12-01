@@ -1,9 +1,9 @@
-package org.paperbridge.backend.repository;
+package org.paperbridge.backend.document.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import org.paperbridge.backend.model.DocumentHistory;
+import org.paperbridge.backend.document.model.DocumentHistory;
 
 import java.util.List;
 
@@ -22,3 +22,6 @@ public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory
      */
     List<DocumentHistory> findByDocumentIdOrderByVersionNumber(Long documentId);
 }
+
+
+

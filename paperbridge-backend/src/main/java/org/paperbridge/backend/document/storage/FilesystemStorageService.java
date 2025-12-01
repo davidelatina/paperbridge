@@ -1,4 +1,4 @@
-package org.paperbridge.backend.storage;
+package org.paperbridge.backend.document.storage;
 
 import org.paperbridge.backend.config.StorageProperties;
 import org.springframework.stereotype.Service;
@@ -129,3 +129,6 @@ public class FilesystemStorageService implements StorageService {
     return rootLocation.resolve(relativePath);
   }
 }
+
+
+

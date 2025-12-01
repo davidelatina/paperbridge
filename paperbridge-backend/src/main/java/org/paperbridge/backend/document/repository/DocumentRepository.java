@@ -1,6 +1,6 @@
-package org.paperbridge.backend.repository;
+package org.paperbridge.backend.document.repository;
 
-import org.paperbridge.backend.model.Document;
+import org.paperbridge.backend.document.model.Document;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -21,3 +21,6 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
    */
   List<Document> findByTagsContaining(String tag);
 }
+
+
+

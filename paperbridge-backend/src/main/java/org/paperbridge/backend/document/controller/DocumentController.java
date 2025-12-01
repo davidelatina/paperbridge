@@ -1,10 +1,10 @@
-package org.paperbridge.backend.controller;
+package org.paperbridge.backend.document.controller;
 
-import org.paperbridge.backend.model.Document;
-import org.paperbridge.backend.model.DocumentHistory;
-import org.paperbridge.backend.repository.DocumentHistoryRepository;
-import org.paperbridge.backend.repository.DocumentRepository;
-import org.paperbridge.backend.storage.StorageService;
+import org.paperbridge.backend.document.model.Document;
+import org.paperbridge.backend.document.model.DocumentHistory;
+import org.paperbridge.backend.document.repository.DocumentHistoryRepository;
+import org.paperbridge.backend.document.repository.DocumentRepository;
+import org.paperbridge.backend.document.storage.StorageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -183,4 +183,6 @@ class DocumentNotFoundException extends RuntimeException {
     super(message);
   }
 }
+
+
 
